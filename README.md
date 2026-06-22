@@ -1,0 +1,70 @@
+# Story Continuity Guard
+
+Story Continuity Guard is a local-first Codex plugin for AI-assisted fiction projects. It helps writers keep character facts, revision history, and downstream story artifacts consistent without sending manuscripts to an external service.
+
+The project combines a reusable Codex skill with a deterministic command-line validator. The skill guides evidence-based, read-only review; the validator catches structural problems before creative review begins.
+
+## Why it exists
+
+Long-running AI writing projects often drift: a character's age changes, an old outline silently becomes current again, or an unresolved idea is presented as canon. Story Continuity Guard makes those risks visible through explicit fact labels and immutable revisions.
+
+## Features
+
+- Validates required YAML frontmatter on Markdown story artifacts.
+- Enforces allowed document and claim statuses.
+- Detects missing `[confirmed]`, `[inferred]`, or `[unresolved]` labels.
+- Requires top-level `claim_status: unresolved` when unresolved facts exist.
+- Checks revision filename conventions and `supersedes` relationships.
+- Produces machine-readable JSON for CI.
+- Keeps the audit workflow read-only and local.
+
+## Quick start
+
+```bash
+python scripts/validate_story.py examples
+```
+
+Return code `0` means no validation errors were found. Add `--json` for CI-friendly output:
+
+```bash
+python scripts/validate_story.py examples --json
+```
+
+Run the tests with only the Python standard library:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+## Codex plugin
+
+The plugin manifest lives in `.codex-plugin/plugin.json`. The included `continuity-audit` skill asks Codex to inspect story artifacts and report evidence-backed issues without silently editing the manuscript.
+
+## Artifact contract
+
+Each governed Markdown artifact starts with YAML frontmatter containing:
+
+```yaml
+id: episode-01-outline
+revision: v1
+status: needs-human-review
+created_at: 2026-06-22
+source_refs: []
+claim_status: unresolved
+supersedes: null
+stale_reason: null
+```
+
+Important statements in mixed-certainty documents carry one of three labels: `[confirmed]`, `[inferred]`, or `[unresolved]`.
+
+## Privacy
+
+The validator makes no network requests and has no runtime dependencies outside Python's standard library. Manuscripts stay on the machine where the command runs.
+
+## Contributing
+
+Issues and small, focused pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+MIT

@@ -1,0 +1,18 @@
+{
+  "name": "story-continuity-guard",
+  "version": "0.1.0",
+  "description": "A local-first Codex plugin for auditing story revisions, fact sources, and continuity metadata.",
+  "author": {
+    "name": "taihu777"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Story Continuity Guard",
+    "shortDescription": "Audit story facts, revisions, and continuity.",
+    "longDescription": "A local-first continuity workflow for AI-assisted stories. It checks revision metadata, claim labels, source references, and immutable-history conventions before narrative drift reaches production.",
+    "developerName": "taihu777",
+    "category": "Productivity",
+    "capabilities": ["story auditing", "revision validation", "continuity QA"],
+    "defaultPrompt": "Audit this story project for revision and continuity risks without modifying its source files."
+  }
+}
