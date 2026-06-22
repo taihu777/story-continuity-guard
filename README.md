@@ -1,6 +1,6 @@
 # Story Continuity Guard
 
-Story Continuity Guard is a local-first Codex plugin for AI-assisted fiction projects. It helps writers keep character facts, revision history, and downstream story artifacts consistent without sending manuscripts to an external service.
+Story Continuity Guard is a local-first Codex plugin for AI-assisted fiction and agent projects. It helps writers keep character facts and revisions consistent, and helps maintainers detect risky instructions or configuration before running contributed agent files.
 
 The project combines a reusable Codex skill with a deterministic command-line validator. The skill guides evidence-based, read-only review; the validator catches structural problems before creative review begins.
 
@@ -17,6 +17,8 @@ Long-running AI writing projects often drift: a character's age changes, an old 
 - Checks revision filename conventions and `supersedes` relationships.
 - Produces machine-readable JSON for CI.
 - Keeps the audit workflow read-only and local.
+- Audits `AGENTS.md`, `SKILL.md`, plugin manifests, and MCP configuration.
+- Flags shell-pipe installation, encoded execution, secret-like literals, insecure URLs, and path traversal.
 
 ## Quick start
 
@@ -30,6 +32,15 @@ Return code `0` means no validation errors were found. Add `--json` for CI-frien
 python scripts/validate_story.py examples --json
 ```
 
+Audit an agent or Codex project:
+
+```bash
+python scripts/audit_agent_config.py .
+python scripts/audit_agent_config.py . --format sarif
+```
+
+The SARIF output can be consumed by code-scanning systems. Findings are heuristic and should be reviewed by a human; the tool never executes inspected configuration.
+
 Run the tests with only the Python standard library:
 
 ```bash
@@ -38,7 +49,7 @@ python -m unittest discover -s tests -v
 
 ## Codex plugin
 
-The plugin manifest lives in `.codex-plugin/plugin.json`. The included `continuity-audit` skill asks Codex to inspect story artifacts and report evidence-backed issues without silently editing the manuscript.
+The plugin manifest lives in `.codex-plugin/plugin.json`. The included `continuity-audit` and `agent-config-security-audit` skills ask Codex to report evidence-backed issues without silently editing source files.
 
 ## Artifact contract
 
